@@ -1,6 +1,20 @@
 <?php
 
 return array(
+    'doctrine' => array(
+        'driver' => array(
+            // overriding zfc-user-doctrine-orm's config
+            'zfcuser_entity' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                //'paths' => __DIR__ . '/../../module/UserAuth/src/UserAuth/Entity/',
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'Admin' => 'zfcuser_entity',
+                ),
+            ),
+        ),
+    ),
     'zfcuser' => array(
         // telling ZfcUser to use our own class
         'user_entity_class' => '\Admin\Entity\User',
@@ -41,8 +55,7 @@ return array(
                   'roles' => array('guest')
                   ), */
                 array('controller' => 'DoctrineORMModule\Yuml\YumlController', 'roles' => array('admin')),
-                array('controller' => 'zfcuser', 'action' => array('index', 'logout'), 'roles' => array('user')),
-                array('controller' => 'zfcuser', 'action' => array('login', 'register'), 'roles' => array('guest')),
+                array('controller' => 'zfcuser', 'roles' => array('guest')),
                 array('controller' => 'Admin\Controller\Index', 'roles' => array('admin')),
                 array('controller' => 'Admin\Controller\User', 'roles' => array('admin')),
                 //array('controller' => 'zfcuser', 'roles' => array()),

@@ -45,21 +45,4 @@ return array(
             'admin' => __DIR__ . '/../view',
         ),
     ),
-    'doctrine' => array(
-        'driver' => array(
-            'Admin_driver' => array(
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'memcached',
-                'paths' => array(__DIR__ . '/../src/Admin/Entity'),
-                'metadata_cache' => 'my_memcache',
-                'query_cache' => 'doctrine.cache.my_memcache',
-                'result_cache' => 'doctrine.cache.my_memcache',
-            ),
-            'orm_default' => array(
-                'drivers' => array(
-                    'Admin\Entity' => 'Admin_driver'
-                ),
-            ),
-        ),
-    ),
 );
