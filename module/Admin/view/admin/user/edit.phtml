@@ -1,0 +1,19 @@
+<?php
+$title = 'Modify User';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php
+$form->setAttribute('action', $this->url('admin_user', array('action' => 'edit', 'id' => $user->getId())));
+$form->setAttribute('class', 'form-horizontal');
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+foreach ($form as $element) {
+    echo $this->formLabel($element, $this->formElement($element), $element->getLabel());
+    echo $this->formElementErrors($element);
+}
+
+echo $this->form()->closeTag();
