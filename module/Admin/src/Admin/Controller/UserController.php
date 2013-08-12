@@ -7,6 +7,9 @@ use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
 use Zend\View\Model\ViewModel;
 use Admin\Form\UserForm;
 use Admin\Entity\User;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use Zend\Paginator\Paginator;
 
 class UserController extends EntityUsingController
 {
@@ -19,9 +22,18 @@ class UserController extends EntityUsingController
     {
         $em = $this->getEntityManager();
 
-        $users = $em->getRepository('Admin\Entity\User')->findBy(array(), array('email' => 'ASC'));
+        $query = $em->getRepository('Admin\Entity\User')->createQueryBuilder('User')->getQuery();
 
-        return new ViewModel(array('users' => $users,));
+        $paginator = new Paginator(
+                new DoctrinePaginator(new ORMPaginator($query))
+        );
+
+        $paginator->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1))
+                ->setItemCountPerPage(2);
+
+        return new ViewModel(array(
+            'paginator' => $paginator,
+        ));
     }
 
     /**

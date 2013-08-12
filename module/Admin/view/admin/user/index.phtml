@@ -4,26 +4,54 @@ $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 <table class="table table-bordered table-hover">
-    <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
-    </tr>
-    <?php foreach ($users as $user) : ?>
+    <thead>
         <tr>
-            <td><?php echo $this->escapeHtml($user->getUsername()); ?></td>
-            <td><?php echo $this->escapeHtml($user->getEmail()); ?></td>
-            <td><?php echo $this->escapeHtml($user->getFirstName()); ?></td>
-            <td><?php echo $this->escapeHtml($user->getLastName()); ?></td>
-            <td>
-                <a href="<?php echo $this->url('admin_user', array('action' => 'edit', 'id' => $user->getId())); ?>">Edit</a>
-            </td>
-            <td>
-                <a href="<?php echo $this->url('admin_user', array('action' => 'delete', 'id' => $user->getId())); ?>" onclick="return confirm('Are you sure?')">Delete</a>
+            <th>Username</th>
+            <th>Email</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Role</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->paginator as $user) : ?>
+            <tr>
+                <td><?php echo $this->escapeHtml($user->getUsername()); ?></td>
+                <td><?php echo $this->escapeHtml($user->getEmail()); ?></td>
+                <td><?php echo $this->escapeHtml($user->getFirstName()); ?></td>
+                <td><?php echo $this->escapeHtml($user->getLastName()); ?></td>
+                <td>
+                    <?php $roles = $user->getRole(); ?>
+                    <?php foreach ($roles as $role) : ?>
+                        <div><?php echo $this->escapeHtml($role->getRoleId()); ?></div>
+                    <?php endforeach; ?>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url('admin_user', array('action' => 'edit', 'id' => $user->getId())); ?>">Edit</a>
+                </td>
+                <td>
+                    <a href="<?php echo $this->url('admin_user', array('action' => 'delete', 'id' => $user->getId())); ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="7">
+                <div style="float: right;">
+                    <?php
+                    // add at the end of the file after the table
+                    echo $this->paginationControl(
+                            // the paginator object
+                            $this->paginator, 'sliding', array('partial/paginator.phtml', 'Admin'), array(
+                        'route' => 'admin_user',
+                            )
+                    );
+                    ?>
+                </div>
             </td>
         </tr>
-    <?php endforeach; ?>
+    </tfoot>
 </table>
