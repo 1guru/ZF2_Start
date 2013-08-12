@@ -42,11 +42,12 @@
         </div>
         <div class="container">
             <?php if (isset($successMessages)) : ?>
-                <ul class="flash-messages unstyled">
-                    <?php foreach ($successMessages as $flashMessage) : ?>
-                        <li><?php echo $flashMessage; ?></li>
-                    <?php endforeach; ?> 
-                </ul>
+                <?php foreach ($successMessages as $flashMessage) : ?>
+                    <div class="flash-messages alert alert-success">
+                        <a class="close" data-dismiss="alert">×</a>
+                        <?php echo $flashMessage; ?>
+                    </div>
+                <?php endforeach; ?> 
             <?php endif; ?>
             <?php echo $this->content; ?>
             <hr>
