@@ -29,7 +29,7 @@ class UserController extends EntityUsingController
         );
 
         $paginator->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1))
-                ->setItemCountPerPage(2);
+                ->setItemCountPerPage(25);
 
         return new ViewModel(array(
             'paginator' => $paginator,
