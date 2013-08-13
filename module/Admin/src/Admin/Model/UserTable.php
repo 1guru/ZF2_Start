@@ -6,6 +6,7 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 use Admin\Entity\User;
+use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
 
 class UserTable
 {
@@ -70,18 +71,41 @@ class UserTable
         return $user;
     }
 
+    /**
+     * 
+     * @param \Admin\Entity\User $user
+     */
     public function save(User $user)
     {
         $this->em->persist($user);
         $this->em->flush();
     }
 
-    public function deleteAlbum($id)
+    /**
+     * 
+     * @param int $id
+     * @return boolean
+     */
+    public function delete($id)
     {
         $id = (int) $id;
         $user = $this->getRepository()->find($id);
-        $this->em->remove($user);
-        $this->em->flush();
+        if ($user) {
+            $this->em->remove($user);
+            $this->em->flush();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 
+     * @return \DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity
+     */
+    public function getFormHydrator()
+    {
+        return new DoctrineEntity($this->em, 'Admin\Entity\User');
     }
 
 }

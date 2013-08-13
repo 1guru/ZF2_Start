@@ -2,38 +2,44 @@
 
 namespace Api\Controller;
 
-use Admin\Entity\User;
 use Zend\View\Model\JsonModel;
-use Application\Controller\EntityUsingRestController;
-use Doctrine\ORM\Query;
 use Application\Services\EntitySerializer;
+use Zend\Mvc\Controller\AbstractRestfulController;
 
-class UserController extends EntityUsingRestController
+class UserController extends AbstractRestfulController
 {
+
+    /**
+     *
+     * @var \Admin\Model\UserTable
+     */
+    protected $userTable;
+    protected $collectionOptions = array('GET', 'POST');
+    protected $resourceOptions = array('DELETE', 'GET', 'PATCH', 'PUT');
 
     public function getList()
     {
-        $em = $this->getEntityManager();
-        $users = $em->getRepository('Admin\Entity\User')->findBy(array(), array('email' => 'ASC'));
-        $user = $em->getRepository('Admin\Entity\User')->findOneBy(array('id' => 4));
-
-        $serializer = new EntitySerializer($em); // Pass the EntityManager object
-        $users_array = $serializer->serialize($users);
-
+        $users = $this->getUserTable()->fetchAll();
         return new JsonModel(array(
-            "users" => $users_array,
-            "user" => $serializer->serialize($user),
+            "users" => $this->serialize($users),
         ));
     }
 
     public function get($id)
     {
-        # code...
+        $user = $this->getUserTable()->getUser($id);
+        return new JsonModel($this->serialize($user));
     }
 
     public function create($data)
     {
-        # code...
+        $resource = $this->myComposedService->create($data);
+        $response = $this->getResponse();
+        $response->setStatusCode(201); // Created
+        $response->getHeaders()->addHeaderLine(
+                'Location', $this->url('recipe', array('id', $resource->id))
+        );
+        return $resource; // More on this later
     }
 
     public function update($id, $data)
@@ -44,6 +50,40 @@ class UserController extends EntityUsingRestController
     public function delete($id)
     {
         # code...
+    }
+
+    public function options()
+    {
+        if ($this->params->fromRoute('id', false)) {
+            $options = $this->resourceOptions;
+        } else {
+            $options = $this->collectionOptions;
+        }
+        $response = $this->getResponse();
+        $response->getHeaders()
+                ->addHeaderLine('Allow', implode(',', $options));
+        return $response;
+    }
+
+    /**
+     * 
+     * @return \Admin\Model\UserTable
+     */
+    protected function getUserTable()
+    {
+        if (!$this->userTable) {
+            $sm = $this->getServiceLocator();
+            $this->userTable = $sm->get('Admin\Model\UserTable');
+        }
+        return $this->userTable;
+    }
+
+    protected function serialize($entity)
+    {
+        $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+
+        $serializer = new EntitySerializer($em); // Pass the EntityManager object
+        return $serializer->serialize($entity);
     }
 
 }

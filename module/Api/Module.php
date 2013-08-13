@@ -1,8 +1,12 @@
 <?php
+
 namespace Api;
+
+use Admin\Model\UserTable;
 
 class Module
 {
+
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
@@ -18,4 +22,18 @@ class Module
             ),
         );
     }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Admin\Model\UserTable' => function($sm) {
+                    $doctrineEntityManager = $sm->get('Doctrine\ORM\EntityManager');
+                    $table = new UserTable($doctrineEntityManager);
+                    return $table;
+                },
+            ),
+        );
+    }
+
 }

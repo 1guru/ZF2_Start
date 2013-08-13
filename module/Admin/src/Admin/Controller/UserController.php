@@ -2,17 +2,18 @@
 
 namespace Admin\Controller;
 
-use Application\Controller\EntityUsingController;
-use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
 use Zend\View\Model\ViewModel;
 use Admin\Form\UserForm;
 use Admin\Entity\User;
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
 
-class UserController extends EntityUsingController
+class UserController extends AbstractActionController
 {
+
+    /**
+     *
+     * @var \Admin\Model\UserTable
+     */
+    protected $userTable;
 
     /**
      * Index action
@@ -20,13 +21,7 @@ class UserController extends EntityUsingController
      */
     public function indexAction()
     {
-        $em = $this->getEntityManager();
-
-        $query = $em->getRepository('Admin\Entity\User')->createQueryBuilder('User')->getQuery();
-
-        $paginator = new Paginator(
-                new DoctrinePaginator(new ORMPaginator($query))
-        );
+        $paginator = $this->getUserTable()->fetchAll(true);
 
         $paginator->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1))
                 ->setItemCountPerPage(25);
@@ -45,11 +40,11 @@ class UserController extends EntityUsingController
         $user = new User;
 
         if ($this->params('id') > 0) {
-            $user = $this->getEntityManager()->getRepository('Admin\Entity\User')->find($this->params('id'));
+            $user = $this->getUserTable()->getUser($this->params('id'));
         }
 
         $form = new UserForm($this->getEntityManager());
-        $form->setHydrator(new DoctrineEntity($this->getEntityManager(), 'Admin\Entity\User'));
+        $form->setHydrator($this->getUserTable()->getFormHydrator());
         $form->bind($user);
 
         $request = $this->getRequest();
@@ -58,10 +53,7 @@ class UserController extends EntityUsingController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $em = $this->getEntityManager();
-
-                $em->persist($user);
-                $em->flush();
+                $this->getUserTable()->save($user);
 
                 $this->flashMessenger()->addSuccessMessage('User Saved');
 
@@ -81,17 +73,26 @@ class UserController extends EntityUsingController
      */
     public function deleteAction()
     {
-        $user = $this->getEntityManager()->getRepository('Admin\Entity\User')->find($this->params('id'));
-
-        if ($user) {
-            $em = $this->getEntityManager();
-            $em->remove($user);
-            $em->flush();
-
-            $this->flashMessenger()->addSuccessMessage('User Deleted');
+        if ($this->getUserTable()->delete($this->params('id'))) {
+            $this->flashMessenger()->addSuccessMessage('User deleted');
+        } else {
+            $this->flashMessenger()->addErrorMessage('User cannot be deleted');
         }
 
         return $this->redirect()->toRoute('admin_user');
+    }
+
+    /**
+     * 
+     * @return \Admin\Model\UserTable
+     */
+    public function getUserTable()
+    {
+        if (!$this->userTable) {
+            $sm = $this->getServiceLocator();
+            $this->userTable = $sm->get('Admin\Model\UserTable');
+        }
+        return $this->userTable;
     }
 
 }
