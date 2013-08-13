@@ -54,7 +54,7 @@ class UserController extends AbstractRestfulController
 
     public function options()
     {
-        if ($this->params->fromRoute('id', false)) {
+        if ($this->params('id')) {
             $options = $this->resourceOptions;
         } else {
             $options = $this->collectionOptions;
@@ -62,7 +62,6 @@ class UserController extends AbstractRestfulController
         $response = $this->getResponse();
         $response->getHeaders()
                 ->addHeaderLine('Allow', implode(',', $options));
-        return $response;
     }
 
     /**

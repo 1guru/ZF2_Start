@@ -3,6 +3,7 @@
 namespace Admin;
 
 use Admin\Model\UserTable;
+use Admin\Model\UserRoleTable;
 
 class Module
 {
@@ -60,8 +61,8 @@ class Module
                     $form = $e->getTarget();  // Form object
 
                     $sm = $form->getServiceManager();
-                    $em = $sm->get('Doctrine\ORM\EntityManager');
-                    $guestRole = $em->getRepository('Admin\Entity\UserRole')->findOneBy(array('roleid' => \Admin\Entity\UserBase::DEFAULT_ROLE));
+
+                    $guestRole = $sm->get('Admin\Model\UserRoleTable')->getDefaultRole();
                     $user->addRole($guestRole);
                 });
 
@@ -82,6 +83,11 @@ class Module
                 'Admin\Model\UserTable' => function($sm) {
                     $doctrineEntityManager = $sm->get('Doctrine\ORM\EntityManager');
                     $table = new UserTable($doctrineEntityManager);
+                    return $table;
+                },
+                'Admin\Model\UserRoleTable' => function($sm) {
+                    $doctrineEntityManager = $sm->get('Doctrine\ORM\EntityManager');
+                    $table = new UserRoleTable($doctrineEntityManager);
                     return $table;
                 },
             ),

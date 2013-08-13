@@ -37,21 +37,13 @@ $this->headTitle($title);
             </tr>
         <?php endforeach; ?>
     </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="7">
-                <div style="float: right;">
-                    <?php
-                    // add at the end of the file after the table
-                    echo $this->paginationControl(
-                            // the paginator object
-                            $this->paginator, 'sliding', array('partial/paginator.phtml', 'Admin'), array(
-                        'route' => 'admin_user',
-                            )
-                    );
-                    ?>
-                </div>
-            </td>
-        </tr>
-    </tfoot>
 </table>
+<?php
+// add at the end of the file after the table
+echo $this->paginationControl(
+        // the paginator object
+        $this->paginator, 'sliding', array('partial/paginator.phtml', 'Admin'), array(
+    'route' => 'admin_user',
+        )
+);
+?>

@@ -61,7 +61,7 @@ return array(
                 //array('controller' => 'zfcuser', 'roles' => array()),
                 // Below is the default index action used by the ZendSkeletonApplication
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),
-                array('controller' => 'Api\Controller\User', 'roles' => array()),
+                array('controller' => 'Api\Controller\User', 'roles' => array('admin')),
             ),
 //            /* If this guard is specified here (i.e. it is enabled), it will block
 //             * access to all routes unless they are specified here.

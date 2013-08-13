@@ -2,6 +2,7 @@
 
 namespace Admin\Controller;
 
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Admin\Form\UserForm;
 use Admin\Entity\User;
