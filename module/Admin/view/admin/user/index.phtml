@@ -29,10 +29,10 @@ $this->headTitle($title);
                     <?php endforeach; ?>
                 </td>
                 <td>
-                    <a href="<?php echo $this->url('admin_user', array('action' => 'edit', 'id' => $user->getId())); ?>">Edit</a>
+                    <a href="<?php echo $this->url('admin', array('controller' => 'user', 'action' => 'edit', 'id' => $user->getId())); ?>">Edit</a>
                 </td>
                 <td>
-                    <a href="<?php echo $this->url('admin_user', array('action' => 'delete', 'id' => $user->getId())); ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                    <a href="<?php echo $this->url('admin', array('controller' => 'user', 'action' => 'delete', 'id' => $user->getId())); ?>" onclick="return confirm('Are you sure?')">Delete</a>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -43,7 +43,11 @@ $this->headTitle($title);
 echo $this->paginationControl(
         // the paginator object
         $this->paginator, 'sliding', array('partial/paginator.phtml', 'Admin'), array(
-    'route' => 'admin_user',
+            'route' => 'admin',
+            'route_params' => array(
+                'controller' => 'user',
+                'action' => 'index'
+            )
         )
 );
 ?>

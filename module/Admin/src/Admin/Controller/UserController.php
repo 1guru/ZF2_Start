@@ -58,7 +58,7 @@ class UserController extends AbstractActionController
 
                 $this->flashMessenger()->addSuccessMessage('User Saved');
 
-                return $this->redirect()->toRoute('admin_user');
+                return $this->redirect()->toRoute('admin');
             }
         }
 
@@ -80,7 +80,7 @@ class UserController extends AbstractActionController
             $this->flashMessenger()->addErrorMessage('User cannot be deleted');
         }
 
-        return $this->redirect()->toRoute('admin_user');
+        return $this->redirect()->toRoute('admin');
     }
 
     /**

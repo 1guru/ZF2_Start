@@ -9,32 +9,29 @@ return array(
     ),
     // The following section is new and should be added to your file
     'router' => array(
+        'may_terminate' => true,
         'routes' => array(
-            'admin_index' => array(
+            'admin' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/admin/index[/][:action][/:id]',
+                    'route' => '/admin[/:controller][/:action][/:id]',
                     'constraints' => array(
+                        'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
                     ),
                     'defaults' => array(
-                        'controller' => 'Admin\Controller\Index',
+                        '__NAMESPACE__' => 'Admin\Controller',
+                        'controller' => 'Admin',
                         'action' => 'index',
                     ),
                 ),
-            ),
-            'admin_user' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route' => '/admin/user[/][:action][/:id]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]+',
-                    ),
-                    'defaults' => array(
-                        'controller' => 'Admin\Controller\User',
-                        'action' => 'index',
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type' => 'Wildcard',
+                        'options' => array(
+                        ),
                     ),
                 ),
             ),
