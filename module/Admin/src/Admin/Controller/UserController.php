@@ -44,7 +44,7 @@ class UserController extends AbstractActionController
             $user = $this->getUserTable()->getUser($this->params('id'));
         }
 
-        $form = new UserForm($this->getEntityManager());
+        $form = new UserForm($this->getServiceLocator()->get('Doctrine\ORM\EntityManager'));
         $form->setHydrator($this->getUserTable()->getFormHydrator());
         $form->bind($user);
 
@@ -58,7 +58,7 @@ class UserController extends AbstractActionController
 
                 $this->flashMessenger()->addSuccessMessage('User Saved');
 
-                return $this->redirect()->toRoute('admin');
+                return $this->redirect()->toRoute('admin', array('controller' => 'user'));
             }
         }
 
@@ -80,7 +80,7 @@ class UserController extends AbstractActionController
             $this->flashMessenger()->addErrorMessage('User cannot be deleted');
         }
 
-        return $this->redirect()->toRoute('admin');
+        return $this->redirect()->toRoute('admin', array('controller' => 'user'));
     }
 
     /**

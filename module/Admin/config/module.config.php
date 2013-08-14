@@ -9,7 +9,6 @@ return array(
     ),
     // The following section is new and should be added to your file
     'router' => array(
-        'may_terminate' => true,
         'routes' => array(
             'admin' => array(
                 'type' => 'segment',
@@ -22,7 +21,7 @@ return array(
                     ),
                     'defaults' => array(
                         '__NAMESPACE__' => 'Admin\Controller',
-                        'controller' => 'Admin',
+                        'controller' => 'Index',
                         'action' => 'index',
                     ),
                 ),

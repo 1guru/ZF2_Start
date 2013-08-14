@@ -8,15 +8,25 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-            'api-user' => array(
+            'api' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/api/user[/:id]',
+                    'route' => '/api[/:controller][/:action][/:id]',
                     'constraints' => array(
+                        'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
                     ),
                     'defaults' => array(
-                        'controller' => 'Api\Controller\User',
+                        '__NAMESPACE__' => 'Api\Controller',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type' => 'Wildcard',
+                        'options' => array(
+                        ),
                     ),
                 ),
             ),
