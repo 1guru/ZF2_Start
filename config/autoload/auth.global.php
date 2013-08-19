@@ -96,6 +96,7 @@ return array(
         ),
         // Key used by the cache for caching the acl
         'cache_key' => 'bjyauthorize_acl',
+        'unauthorized_strategy' => 'Application\View\UnauthorizedStrategy',
     ),
 );
 

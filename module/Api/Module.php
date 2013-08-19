@@ -8,6 +8,19 @@ use Zend\Mvc\MvcEvent;
 class Module
 {
 
+    public function onBootstrap(MvcEvent $e)
+    {
+        $sharedEvents = $e->getApplication()->getEventManager()->getSharedManager();
+        $sharedEvents->attach('Zend\Mvc\Controller\AbstractRestfulController', 'dispatch', function($e) {
+                    $result = $e->getResult();
+                    $result->setTerminal(true);
+                    if ($result instanceof \Zend\View\Model\ViewModel) {
+
+                        //$result->setTerminal($e->getRequest()->isXmlHttpRequest());
+                    }
+                });
+    }
+
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
@@ -58,7 +71,6 @@ class Module
 //        $e->getResponse()->send();
 //        die();
 //    }
-
 //    public function onBootstrap(MvcEvent $mvcEvent)
 //    {
 //        // under this module check for application name and api key
